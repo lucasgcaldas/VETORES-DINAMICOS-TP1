@@ -3,7 +3,7 @@
 #include "aglutina.h" // Biblioteca para manipular arquivos do prof Nilton
 #include <stdlib.h> //Necessario para free()
 
-int menu(){
+void menu(){
 	FILE *AR = NULL;
     
 	char opcao = 0; 
@@ -35,8 +35,8 @@ int menu(){
                 else {
                     printf("\n%s aberto!!!\n", NomeArq);
                 	gerarCorpusTextual(AR);
+                	printf("Os 5 arquivos de notas foram criados!!!\n");
 				}
-			    
                 break;
 			case '2':
 				printf("Caso %c\n", opcao);
