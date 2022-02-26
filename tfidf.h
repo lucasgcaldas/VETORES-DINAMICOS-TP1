@@ -9,14 +9,14 @@
 
 #include <stdio.h>
 
-int checaPalavrasRepetidas(char *termos[], FILE *VocabNota, int n);
+int checaPalavrasRepetidas(char *termo, FILE *VocabNota);
 
-int geraDiferentesPalavras(FILE *VocabNota, FILE *SemRepeticao);
+double calculaIDF(int numDocTermo);
 
-int calculaIDF(int numDocTermo, int n);
+int contaNumPalavras(FILE *VocabNota);
 
-int calculaTF(int numRepet[4], int numPalavrasDoc[4], int n);
+double calculaTF(int numRepet, int numPalavrasDoc);
 
-int calculaTFIDF(int TF[4], int IDF, int n);
+double calculaTFIDF(double TF, double IDF);
 
 #endif /* tfidf_h */

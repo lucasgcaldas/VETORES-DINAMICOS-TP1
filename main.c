@@ -28,21 +28,17 @@ void menu(){
     FILE *VocabNota3 = NULL;
     FILE *VocabNota4 = NULL;
     FILE *VocabNota5 = NULL;
-    FILE *SemRepticao1 = NULL;
-    FILE *SemRepticao2 = NULL;
-    FILE *SemRepticao3 = NULL;
-    FILE *SemRepticao4 = NULL;
-    FILE *SemRepticao5 = NULL;
 	char opcao = 0; 
 	char NomeArq[30] = "";
-	int n = 0;
-	char *termos[100];	
-	int numRepet[4] = {0, 0, 0, 0};
-	int numPalavrasDoc[4] = {0, 0, 0, 0};
+	char termo[15];	
+	int numRepet[5] = {0, 0, 0, 0, 0};
+	int numPalavrasDoc[5] = {0, 0, 0, 0, 0};
 	int numDocTermo = 0; // num de doc com o respectivo termo
-	float IDF = 0.0;
-	float TF= 0.0;
-	float tfIDF[4] = {0.0, 0.0, 0.0, 0.0};
+	double IDF = 0.0;
+	double TF[5] = {0.0, 0.0, 0.0, 0.0, 0.0};
+	double tfIDF[5] = {0.0, 0.0, 0.0, 0.0, 0.0};
+	char nota;
+	FILE *ArqNota = NULL;
 	
 	while(opcao != 5){
         
@@ -89,17 +85,8 @@ void menu(){
 			    VocabNota4 = fopen("Arquivos/VocabularioNota4.txt","w");
 			    VocabNota5 = fopen("Arquivos/VocabularioNota5.txt","w");
 			    
-			    // Criar e abrir aquivos
-//			    SemRepticao1 = fopen("Arquivos/SemRepticao1.txt","w");
-//			    SemRepticao2 = fopen("Arquivos/SemRepticao2.txt","w");
-//			    SemRepticao3 = fopen("Arquivos/SemRepticao3.txt","w");
-//			    SemRepticao4 = fopen("Arquivos/SemRepticao4.txt","w");
-//			    SemRepticao5 = fopen("Arquivos/SemRepticao5.txt","w");
-				
+				// Gera vocabulario
 				gerarVocabulario(Nota1, VocabNota1);
-//				VocabNota1 = fopen("Arquivos/VocabularioNota1.txt","r"); // Abrir e ler aquivos
-//				geraDiferentesPalavras(VocabNota1, SemRepticao1);
-				
 				gerarVocabulario(Nota2, VocabNota2);
 				gerarVocabulario(Nota3, VocabNota3);
 				gerarVocabulario(Nota4, VocabNota4);
@@ -107,17 +94,10 @@ void menu(){
 				
 				break;
 				
-			case '3':
-				printf("Quantos termos deja exibir TF-IDF? ");
-				scanf("%d", &n);	
+			case '3':				
+				printf("Para qual termo deseja calcular o TF-IDF?\n");
+				scanf("%s", &termo);
 				printf("\n");
-				
-				printf("Para qual(ais) termo(s) deseja calcular o TF-IDF?\n");
-				int i = 0;
-				for (i = 0; i < n; i++){
-					printf("Termo %d = ", i + 1);
-					scanf("%s", &termos[i]);
-				}
 		
 				VocabNota1 = fopen("Arquivos/VocabularioNota1.txt","r");
 			    VocabNota2 = fopen("Arquivos/VocabularioNota2.txt","r");
@@ -125,16 +105,17 @@ void menu(){
 			    VocabNota4 = fopen("Arquivos/VocabularioNota4.txt","r");
 			    VocabNota5 = fopen("Arquivos/VocabularioNota5.txt","r");
 
-				numRepet[0] = checaPalavrasRepetidas(termos, VocabNota1, n);
-				printf("numRepet1: %d\n", numRepet[0]);
-				numRepet[1] = checaPalavrasRepetidas(termos, VocabNota2, n);
-				printf("numRepet2: %d\n", numRepet[1]);
-				numRepet[2] = checaPalavrasRepetidas(termos, VocabNota3, n);
-				printf("numRepet3: %d\n", numRepet[2]);
-				numRepet[3] = checaPalavrasRepetidas(termos, VocabNota4, n);
-				printf("numRepet4: %d\n", numRepet[3]);
-				numRepet[4] = checaPalavrasRepetidas(termos, VocabNota5, n);
-				printf("numRepet5: %d\n", numRepet[4]);
+				numRepet[0] = checaPalavrasRepetidas(termo, VocabNota1);
+				printf("A palavra se repete no doc1: %d vezes\n", numRepet[0]);
+				numRepet[1] = checaPalavrasRepetidas(termo, VocabNota2);
+				printf("A palavra se repete no doc2: %d vezes\n", numRepet[1]);
+				numRepet[2] = checaPalavrasRepetidas(termo, VocabNota3);
+				printf("A palavra se repete no doc3: %d vezes\n", numRepet[2]);
+				numRepet[3] = checaPalavrasRepetidas(termo, VocabNota4);
+				printf("A palavra se repete no doc4: %d vezes\n", numRepet[3]);
+				numRepet[4] = checaPalavrasRepetidas(termo, VocabNota5);
+				printf("A palavra se repete no doc5: %d vezes\n", numRepet[4]);
+				printf("\n");
 				
 				if (numRepet[0] > 0){
 					numDocTermo++;
@@ -148,21 +129,54 @@ void menu(){
 					numDocTermo++;
 				} 
 				
-				printf("numDocPalavra: %d\n", numDocTermo);
+				printf("Numero de documentos que contem o termo: %d\n", numDocTermo);
+				printf("\n");
 				
+				VocabNota1 = fopen("Arquivos/VocabularioNota1.txt","r");
+			    VocabNota2 = fopen("Arquivos/VocabularioNota2.txt","r");
+			    VocabNota3 = fopen("Arquivos/VocabularioNota3.txt","r");
+			    VocabNota4 = fopen("Arquivos/VocabularioNota4.txt","r");
+			    VocabNota5 = fopen("Arquivos/VocabularioNota5.txt","r");
+				
+				numPalavrasDoc[0] = contaNumPalavras(VocabNota1);
+				numPalavrasDoc[1] = contaNumPalavras(VocabNota2);
+				numPalavrasDoc[2] = contaNumPalavras(VocabNota3);
+				numPalavrasDoc[3] = contaNumPalavras(VocabNota4);
+				numPalavrasDoc[4] = contaNumPalavras(VocabNota5);
+				
+				int i = 0;
+				for(i = 0; i < 5; i++){
+					printf("Numero de palavras em cada documento = %d\n", numPalavrasDoc[i]);
+				}
+				
+				IDF = calculaIDF(numDocTermo);
+				printf("\n");
+				printf("IDF = %f\n", IDF);
+				printf("\n");
+				
+				for (i = 0; i < 5; i++){
+					TF[i] = calculaTF(numRepet[i], numPalavrasDoc[i]);
+					printf("TF %d = %f\n", i, TF[i]);
+				}
+				
+				for (i = 0; i < 5; i++){
+					tfIDF[i] = calculaTFIDF(TF[i], IDF);
+				}	
+					
+				printf("\n");
+				printf("VOCABULARIO | NOTA1 | NOTA2 | NOTA3 | NOTA4 | NOTA5\n");	
+				printf("%s  |  ", termo);
+				for (i = 0; i < 5; i++){
+					printf("%.4f  |  ", tfIDF[i]);
+				}
+				printf("\n");
+						
 				fclose(VocabNota1);
 				fclose(VocabNota2);
 				fclose(VocabNota3);
 				fclose(VocabNota4);
 				fclose(VocabNota5);	
 				
-				IDF = calculaIDF(numDocTermo, n);
-//				printf("IDE = %f\n", calculaIDF(numDocPalavra));
-
-				TF = calculaTF(numRepet, numPalavrasDoc, n);
-								
-				printf("VOCABULARIO  NOTA1  NOTA2  NOTA3  NOTA4  NOTA5");		
-//				calculaTFIDF();
 				break;
 			case '4':
 				printf("Caso %c\n", opcao);
