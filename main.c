@@ -9,10 +9,10 @@
 
 //-------------------------------------------------------------------------------------------------------------------------------//
 //--------------------------------------------- UNIVERSIDADE DE BRASILIA - CAMPUS FGA -------------------------------------------//
-//                                                   estrutura de dados e algoritmos                                             //
-// GRUPO 2:
-// Arthur D'Assumpção - 190084570
-// Lucas Gomes Caldas - 212005426         
+//                                         Estrutura de Dados e Algoritmos - Prof. Nilton                                        //
+// GRUPO 2:                                                                                                                      //
+// Arthur D'Assumpção - 190084570                                                                                                // 
+// Lucas Gomes Caldas - 212005426                                                                                                //
 //-------------------------------------------------------------------------------------------------------------------------------//
 
 
@@ -179,7 +179,73 @@ void menu(){
 				
 				break;
 			case '4':
-				printf("Caso %c\n", opcao);
+				printf("Para qual nota deseja exibir o TF-IDF?\n");
+				printf("(1) - Nota 1");
+		        printf("\n(2) - Nota 2");
+		        printf("\n(3) - Nota 3");
+		        printf("\n(4) - Nota 4");
+		        printf("\n(5) - Nota 5");
+				printf("\n");
+				scanf("\n%c", &nota);
+				
+				if (nota == '1'){
+					ArqNota = fopen("Arquivos/VocabularioNota1.txt","r");
+				} else if (nota == '2'){
+					ArqNota = fopen("Arquivos/VocabularioNota2.txt","r");
+				} else if (nota == '3'){
+					ArqNota = fopen("Arquivos/VocabularioNota3.txt","r");
+				} else if (nota == '4'){
+					ArqNota = fopen("Arquivos/VocabularioNota4.txt","r");
+				}else if (nota == '5'){
+					ArqNota = fopen("Arquivos/VocabularioNota5.txt","r");
+				} else{
+					break;
+				}
+				
+				printf("Para qual termo deseja calcular o TF-IDF?\n");
+				scanf("%s", &termo);
+				printf("\n");
+				
+				numRepet[0] = checaPalavrasRepetidas(termo, ArqNota);
+				printf("A palavra se repete no doc%c: %d vezes\n", nota,numRepet[0]);
+				
+				if (numRepet[0] > 0){
+					numDocTermo++;
+				}
+				
+				if (nota == '1'){
+					ArqNota = fopen("Arquivos/VocabularioNota1.txt","r");
+				} else if (nota == '2'){
+					ArqNota = fopen("Arquivos/VocabularioNota2.txt","r");
+				} else if (nota == '3'){
+					ArqNota = fopen("Arquivos/VocabularioNota3.txt","r");
+				} else if (nota == '4'){
+					ArqNota = fopen("Arquivos/VocabularioNota4.txt","r");
+				}else if (nota == '5'){
+					ArqNota = fopen("Arquivos/VocabularioNota5.txt","r");
+				} else{
+					break;
+				}
+				
+				numPalavrasDoc[0] = contaNumPalavras(ArqNota);
+				printf("Numero de palavras no documento = %d\n", numPalavrasDoc[0]);
+				
+				IDF = calculaIDF(numDocTermo);
+				printf("\n");
+				printf("IDF = %f\n", IDF);
+				printf("\n");
+				
+				TF[0] = calculaTF(numRepet[0], numPalavrasDoc[0]);
+				printf("TF %c = %f\n", nota, TF[0]);
+				
+				
+				tfIDF[0] = calculaTFIDF(TF[0], IDF);
+							
+				printf("\n");
+				printf("VOCABULARIO | NOTA%c\n", nota);	
+				printf("%s | %.4f", termo, tfIDF[0]);
+				
+				printf("\n");
 				break;
 			case '5':	
 				printf("Caso %c\n", opcao);
